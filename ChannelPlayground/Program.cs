@@ -14,13 +14,17 @@
         {
             Console.WriteLine("-----------------------------------------------------------------------");
             Console.WriteLine("Choose an example to run:");
-            Console.WriteLine("1. SimpleChannel");
-            Console.WriteLine("2. SimpleChannel.ExtensionAPI");
-            Console.WriteLine("3. FanOutChannel");
-            Console.WriteLine("4. FanOutChannel.ExtensionAPI");
-            Console.WriteLine("5. FanInChannel");
-            Console.WriteLine("6. FanInChannel.ExtensionAPI");
-            Console.WriteLine("0. Exit.");
+            Console.WriteLine("1.  SimpleChannel");
+            Console.WriteLine("2.  SimpleChannel.ExtensionAPI");
+            Console.WriteLine("3.  FanOutChannel");
+            Console.WriteLine("4.  FanOutChannel.ExtensionAPI");
+            Console.WriteLine("5.  FanInChannel");
+            Console.WriteLine("6.  FanInChannel.ExtensionAPI");
+            Console.WriteLine("7.  BufferedChannel");
+            Console.WriteLine("8.  BufferedChannel.ExtensionAPI");
+            Console.WriteLine("9.  RouterPipeline");
+            Console.WriteLine("10. RouterPipeline.ExtensionAPI");
+            Console.WriteLine("0.  Exit.");
             var input = Console.ReadLine();
             switch (input)
             {
@@ -41,6 +45,18 @@
                     break;
                 case "6":
                     await FanInChannel.ExtensionAPI();
+                    break;
+                case "7":
+                    await BufferedChannel.BaseAPI();
+                    break;
+                case "8":
+                    await BufferedChannel.ExtensionAPI();
+                    break;
+                case "9":
+                    await RouterPipeline.BaseAPI();
+                    break;
+                case "10":
+                    await RouterPipeline.ExtensionAPI();
                     break;
                 case "0":
                     Environment.Exit(0);
