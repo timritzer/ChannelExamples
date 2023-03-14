@@ -29,6 +29,18 @@ namespace ChannelPlayground.ChannelPatterns
             writer.Complete();
         }
 
+        private static async IAsyncEnumerable<int> GetNumbersAsync()
+        {
+            foreach (var tens in Enumerable.Range(0, 10))
+            {
+                foreach (var ones in Enumerable.Range(0, 10))
+                {
+                    yield return tens * 10 + ones;
+                }
+                await Task.Delay(500);
+            }
+        }
+
         private static async Task ReadNumbers(ChannelReader<int> reader)
         {
             while (await reader.WaitToReadAsync())
@@ -50,18 +62,6 @@ namespace ChannelPlayground.ChannelPatterns
                  .Source(GetNumbersAsync(), CancellationToken.None)
                  .Batch(10)
                  .ReadAll((item) => Console.WriteLine($"Read Item: {item.Sum()}"));
-        }
-
-        private static async IAsyncEnumerable<int> GetNumbersAsync()
-        {
-            foreach (var tens in Enumerable.Range(0, 10))
-            {
-                foreach (var ones in Enumerable.Range(0, 10))
-                {
-                    yield return tens * 10 + ones;
-                }
-                await Task.Delay(500);
-            }
         }
     }
 }
