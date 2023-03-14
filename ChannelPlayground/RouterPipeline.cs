@@ -57,7 +57,7 @@ namespace ChannelPlayground
 
             var producer = async () => await Channel.CreateUnbounded<int>()
                 .Source(Enumerable.Range(0, 10))
-                .ReadAll((item) => (item % 2 == 0 ? evenChannel : oddChannel).Writer.WriteAsync(item));
+                .ReadAllAsync((item) => (item % 2 == 0 ? evenChannel : oddChannel).Writer.WriteAsync(item));
 
             await Task.WhenAll(
                 Task.Run(async () => await producer()).ContinueWith(async (t) => {

@@ -24,6 +24,9 @@
             Console.WriteLine("8.  BufferedChannel.ExtensionAPI");
             Console.WriteLine("9.  RouterPipeline");
             Console.WriteLine("10. RouterPipeline.ExtensionAPI");
+            Console.WriteLine("11. BroadcastPipeline");
+            Console.WriteLine("12. BroadcastPipeline.ExtensionAPI");
+
             Console.WriteLine("0.  Exit.");
             var input = Console.ReadLine();
             switch (input)
@@ -57,6 +60,13 @@
                     break;
                 case "10":
                     await RouterPipeline.ExtensionAPI();
+                    break;
+
+                case "11":
+                    await BroadcastPipeline.BaseAPI();
+                    break;
+                case "12":
+                    await BroadcastPipeline.ExtensionAPI();
                     break;
                 case "0":
                     Environment.Exit(0);

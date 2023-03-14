@@ -58,23 +58,31 @@ namespace ChannelPlayground
             }
         }
 
-        //public static async Task ExtensionAPI()
-        //{
-        //    var oddChannel = Channel.CreateUnbounded<int>();
-        //    var evenChannel = Channel.CreateUnbounded<int>();
 
-        //    var producer = async () => await Channel.CreateUnbounded<int>()
-        //        .Source(Enumerable.Range(0, 10))
-        //        .ReadAll((item) => (item % 2 == 0 ? evenChannel : oddChannel).Writer.WriteAsync(item));
+        public static async Task ExtensionAPI()
+        {
+            var sqRootChannel = Channel.CreateUnbounded<int>();
+            var squareChannel = Channel.CreateUnbounded<int>();
+            var writers = new List<ChannelWriter<int>>() { sqRootChannel.Writer, squareChannel.Writer };
 
-        //    await Task.WhenAll(
-        //        Task.Run(async () => await producer()).ContinueWith(async (t) =>
-        //        {
-        //            await oddChannel.CompleteAsync();
-        //            await evenChannel.CompleteAsync();
-        //        }),
-        //        Task.Run(() => ReadNumbers(oddChannel.Reader, "Odd Channel")),
-        //        Task.Run(() => ReadNumbers(evenChannel.Reader, "Even Channel")));
-        //}
+            var producer = async () => await Channel.CreateUnbounded<int>()
+                .Source(Enumerable.Range(0, 10))
+                .ReadAllAsEnumerablesAsync(async (items) => {
+                    foreach(var item in items)
+                    {
+                        var writingTasks = writers.Select(c => c.WriteAsync(item).AsTask());
+                        await Task.WhenAll(writingTasks);
+                    }
+                    foreach (var writer in writers)
+                    {
+                        writer.TryComplete();
+                    }
+                });
+
+            await Task.WhenAll(
+                Task.Run(async () => await producer()),
+                Task.Run(() => CalculateSqRoot(sqRootChannel.Reader)),
+                Task.Run(() => CalculateSq(squareChannel.Reader)));
+        }
     }
 }
