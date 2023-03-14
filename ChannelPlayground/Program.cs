@@ -1,4 +1,7 @@
-﻿namespace ChannelPlayground
+﻿using ChannelPlayground.ChannelPatterns;
+using ChannelPlayground.PipelinePatterns;
+
+namespace ChannelPlayground
 {
     internal class Program
     {
@@ -7,27 +10,33 @@
             while (true)
             {
                 await Menu();
+                Console.WriteLine("Press any key to continue.");
+                Console.ReadKey();
             }
         }
 
         private static async Task Menu()
         {
-            Console.WriteLine("-----------------------------------------------------------------------");
-            Console.WriteLine("Choose an example to run:");
-            Console.WriteLine("1.  SimpleChannel");
-            Console.WriteLine("2.  SimpleChannel.ExtensionAPI");
-            Console.WriteLine("3.  FanOutChannel");
-            Console.WriteLine("4.  FanOutChannel.ExtensionAPI");
-            Console.WriteLine("5.  FanInChannel");
-            Console.WriteLine("6.  FanInChannel.ExtensionAPI");
-            Console.WriteLine("7.  BufferedChannel");
-            Console.WriteLine("8.  BufferedChannel.ExtensionAPI");
-            Console.WriteLine("9.  RouterPipeline");
-            Console.WriteLine("10. RouterPipeline.ExtensionAPI");
-            Console.WriteLine("11. BroadcastPipeline");
-            Console.WriteLine("12. BroadcastPipeline.ExtensionAPI");
-
-            Console.WriteLine("0.  Exit.");
+            Console.BackgroundColor= ConsoleColor.DarkBlue;
+            Console.ForegroundColor = ConsoleColor.White;
+            Console.Clear();
+            Console.WriteLine("||========================================================================================================||");
+            Console.WriteLine("|| Choose an example to run:                                                                              ||");
+            Console.WriteLine("|| 1.  SimpleChannel                                                                                      ||");
+            Console.WriteLine("|| 2.  SimpleChannel.ExtensionAPI                                                                         ||");
+            Console.WriteLine("|| 3.  FanOutChannel                                                                                      ||");
+            Console.WriteLine("|| 4.  FanOutChannel.ExtensionAPI                                                                         ||");
+            Console.WriteLine("|| 5.  FanInChannel                                                                                       ||");
+            Console.WriteLine("|| 6.  FanInChannel.ExtensionAPI                                                                          ||");
+            Console.WriteLine("|| 7.  BufferedChannel                                                                                    ||");
+            Console.WriteLine("|| 8.  BufferedChannel.ExtensionAPI                                                                       ||");
+            Console.WriteLine("|| 9.  RouterPipeline                                                                                     ||");
+            Console.WriteLine("|| 10. RouterPipeline.ExtensionAPI                                                                        ||");
+            Console.WriteLine("|| 11. BroadcastPipeline                                                                                  ||");
+            Console.WriteLine("|| 12. BroadcastPipeline.ExtensionAPI                                                                     ||");
+            Console.WriteLine("|| 0.  Exit.                                                                                              ||");
+            Console.WriteLine("||========================================================================================================||");
+            
             var input = Console.ReadLine();
             switch (input)
             {
