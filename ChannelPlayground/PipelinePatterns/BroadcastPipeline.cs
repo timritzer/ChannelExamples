@@ -7,7 +7,7 @@ using System.Threading.Channels;
 using System.Threading.Tasks;
 using Open.ChannelExtensions;
 
-namespace ChannelPlayground
+namespace ChannelPlayground.PipelinePatterns
 {
     internal class BroadcastPipeline
     {
@@ -67,8 +67,9 @@ namespace ChannelPlayground
 
             var producer = async () => await Channel.CreateUnbounded<int>()
                 .Source(Enumerable.Range(0, 10))
-                .ReadAllAsEnumerablesAsync(async (items) => {
-                    foreach(var item in items)
+                .ReadAllAsEnumerablesAsync(async (items) =>
+                {
+                    foreach (var item in items)
                     {
                         var writingTasks = writers.Select(c => c.WriteAsync(item).AsTask());
                         await Task.WhenAll(writingTasks);

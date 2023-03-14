@@ -7,9 +7,9 @@ using System.Threading.Channels;
 using System.Threading.Tasks;
 using Open.ChannelExtensions;
 
-namespace ChannelPlayground
+namespace ChannelPlayground.ChannelPatterns
 {
-    internal class SimpleChannel
+    internal class BufferedChannel
     {
         public static async Task BaseAPI()
         {
@@ -22,7 +22,7 @@ namespace ChannelPlayground
 
         private static async Task WriteNumbers(ChannelWriter<int> writer)
         {
-            foreach (var item in Enumerable.Range(0, 10))
+            await foreach (var item in GetNumbersAsync())
             {
                 await writer.WriteAsync(item);
             }
@@ -33,18 +33,35 @@ namespace ChannelPlayground
         {
             while (await reader.WaitToReadAsync())
             {
+                await Task.Delay(500);
+                var sum = 0;
                 while (reader.TryRead(out var item))
                 {
-                    Console.WriteLine($"Read Item: {item}");
+                    sum += item;
                 }
+
+                Console.WriteLine($"Sum of batch: {sum}");
             }
         }
 
         public static async Task ExtensionAPI()
         {
-           await Channel.CreateUnbounded<int>()
-                .Source(Enumerable.Range(0, 10))
-                .ReadAll((item) => Console.WriteLine($"Read Item: {item}"));
+            await Channel.CreateUnbounded<int>()
+                 .Source(GetNumbersAsync(), CancellationToken.None)
+                 .Batch(10)
+                 .ReadAll((item) => Console.WriteLine($"Read Item: {item.Sum()}"));
+        }
+
+        private static async IAsyncEnumerable<int> GetNumbersAsync()
+        {
+            foreach (var tens in Enumerable.Range(0, 10))
+            {
+                foreach (var ones in Enumerable.Range(0, 10))
+                {
+                    yield return tens * 10 + ones;
+                }
+                await Task.Delay(500);
+            }
         }
     }
 }

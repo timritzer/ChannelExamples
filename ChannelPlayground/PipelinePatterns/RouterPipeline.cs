@@ -7,7 +7,7 @@ using System.Threading.Channels;
 using System.Threading.Tasks;
 using Open.ChannelExtensions;
 
-namespace ChannelPlayground
+namespace ChannelPlayground.PipelinePatterns
 {
     internal class RouterPipeline
     {
@@ -60,7 +60,8 @@ namespace ChannelPlayground
                 .ReadAllAsync((item) => (item % 2 == 0 ? evenChannel : oddChannel).Writer.WriteAsync(item));
 
             await Task.WhenAll(
-                Task.Run(async () => await producer()).ContinueWith(async (t) => {
+                Task.Run(async () => await producer()).ContinueWith(async (t) =>
+                {
                     await oddChannel.CompleteAsync();
                     await evenChannel.CompleteAsync();
                 }),

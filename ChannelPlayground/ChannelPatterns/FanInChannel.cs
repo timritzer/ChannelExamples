@@ -7,7 +7,7 @@ using System.Threading.Channels;
 using System.Threading.Tasks;
 using Open.ChannelExtensions;
 
-namespace ChannelPlayground
+namespace ChannelPlayground.ChannelPatterns
 {
     internal class FanInChannel : ChannelBase
     {
@@ -17,7 +17,7 @@ namespace ChannelPlayground
 
             var producer = Task.WhenAll(RunMultiple((index) => WriteNumbers(channel.Writer, index), 3)).ContinueWith((t) => channel.Writer.Complete());
             var consumer = Task.Run(() => ReadNumbers(channel.Reader));
-            
+
             await Task.WhenAll(producer, consumer);
         }
 
@@ -44,7 +44,7 @@ namespace ChannelPlayground
         {
             var channel = Channel.CreateUnbounded<string>();
             await Task.WhenAll(
-                    channel.Writer.WriteAllConcurrentlyAsync(3, 
+                    channel.Writer.WriteAllConcurrentlyAsync(3,
                         Enumerable.Range(0, 30).
                             Select(x => ValueTask.FromResult($"(Writer Thread {Thread.CurrentThread.ManagedThreadId} " + x)), complete: true),
                     channel.ReadAll((item) => Console.WriteLine($"Read Item: {item}")).AsTask());
